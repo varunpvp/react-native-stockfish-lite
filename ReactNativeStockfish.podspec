@@ -13,13 +13,21 @@ Pod::Spec.new do |s|
 
   s.platforms = { :ios => min_ios_version_supported }
 
-  s.source       = { :git => "https://github.com/loloof64/ReactNativeStockfish.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/varunpvp/react-native-stockfish-lite.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm}", "cpp/**/*.{hpp,cpp,c,h}"
+  s.exclude_files = "cpp/stockfish/src/syzygy/*.cpp",
+    "cpp/stockfish/src/nnue/features/half_ka_v2_hm.cpp",
+    "cpp/stockfish/src/nnue/features/full_threats.cpp",
+    "cpp/stockfish/src/nnue/features/pp_3wide.cpp"
+  s.preserve_paths = "cpp/nn-61e7af4bb97d.nnue"
 
   s.pod_target_xcconfig = {
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++',
+    'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) USE_LITE_NET __NO_SYZYGY__ IS_64BIT USE_POPCNT',
+    'OTHER_CPLUSPLUSFLAGS[arch=arm64]' => '$(inherited) -DUSE_NEON=8',
+    'HEADER_SEARCH_PATHS' => '$(inherited) "$(PODS_TARGET_SRCROOT)/cpp"',
   }
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
@@ -43,28 +51,4 @@ Pod::Spec.new do |s|
     end
   end
 
-  #-- add the path to the downloaded nnue files
-  s.xcconfig = {
-    'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/ReactNativeStockfish/"'
-  }
-  
-  #-- download nnue files
-  s.script_phases = [
-    {
-      :name => 'Download Stockfish NNUE files',
-      :execution_position => :before_compile,
-      :script => <<-SCRIPT
-        # setup variables
-        NNUE_NAME_BIG="nn-1111cefa1111.nnue"
-        NNUE_NAME_SMALL="nn-37f18f62d772.nnue"
-        DOWNLOAD_BASE_URL="https://tests.stockfishchess.org/api/nn"
-        STOCKFISH_SOURCES_DIR="${PODS_ROOT}/ReactNativeStockfish/"
-
-        # download
-        mkdir -p $STOCKFISH_SOURCES_DIR
-        curl -L -o "$STOCKFISH_SOURCES_DIR/$NNUE_NAME_BIG" "$DOWNLOAD_BASE_URL/$NNUE_NAME_BIG"
-        curl -L -o "$STOCKFISH_SOURCES_DIR/$NNUE_NAME_SMALL" "$DOWNLOAD_BASE_URL/$NNUE_NAME_SMALL"
-      SCRIPT
-    }
-  ]
 end

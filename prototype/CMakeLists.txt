@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.22)
+project(StockfishLitePrototype LANGUAGES CXX)
+
+add_subdirectory(../cpp/stockfish stockfish)
+add_executable(stockfish-lite-smoke smoke.cpp)
+target_include_directories(stockfish-lite-smoke PRIVATE ../cpp)
+target_link_libraries(stockfish-lite-smoke PRIVATE stockfish-lite-core)
+if(ANDROID)
+  target_link_options(stockfish-lite-smoke PRIVATE -Wl,--gc-sections -Wl,-z,max-page-size=16384)
+else()
+  target_link_options(stockfish-lite-smoke PRIVATE -Wl,-dead_strip)
+endif()

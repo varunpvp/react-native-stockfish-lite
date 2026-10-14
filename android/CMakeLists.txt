@@ -1,39 +1,16 @@
-cmake_minimum_required(VERSION 3.4.1)
-project(ReactNativeStockfish)
+cmake_minimum_required(VERSION 3.22)
+project(ReactNativeStockfish LANGUAGES CXX)
 
-set (CMAKE_VERBOSE_MAKEFILE ON)
-set (CMAKE_CXX_STANDARD 17)
+add_subdirectory(../cpp/stockfish stockfish)
+add_library(react-native-stockfish SHARED cpp-adapter.cpp)
+target_include_directories(react-native-stockfish PRIVATE ../cpp)
+target_link_libraries(react-native-stockfish PRIVATE stockfish-lite-core)
+target_link_options(react-native-stockfish PRIVATE -Wl,--gc-sections -Wl,-z,max-page-size=16384)
 
-# Include stockfish NNUE
-set (NNUE_NAME_BIG nn-1111cefa1111.nnue)
-set (NNUE_NAME_SMALL nn-37f18f62d772.nnue)
-## Download big NNUE
-file(DOWNLOAD https://tests.stockfishchess.org/api/nn/${NNUE_NAME_BIG} ../cpp/${NNUE_NAME_BIG} SHOW_PROGRESS)
-file(COPY ../cpp/${NNUE_NAME_BIG} DESTINATION ${CMAKE_BINARY_DIR})
-## Download small NNUE
-file(DOWNLOAD https://tests.stockfishchess.org/api/nn/${NNUE_NAME_SMALL} ../cpp/${NNUE_NAME_SMALL} SHOW_PROGRESS)
-file(COPY ../cpp/${NNUE_NAME_SMALL} DESTINATION ${CMAKE_BINARY_DIR})
-
-# Include stockfish sources and fixes
-file(GLOB_RECURSE stockfishCppPaths "../cpp/stockfish/src/*.cpp")
-file(GLOB_RECURSE stockfishFixesPaths "../cpp/stockfish/fixes/*.cpp")
-
-
-add_library(react-native-stockfish            SHARED
-            ../cpp/react-native-stockfish.cpp
-            cpp-adapter.cpp
-            ${stockfishCppPaths}
-            ${stockfishFixesPaths}
-)
-
-# Specifies a path to native header files.
-include_directories(
-            ../cpp
-            ../cpp/stockfish/fixes
-            ../cpp/stockfish/src
-            ../cpp/stockfish/src/incbin
-            ../cpp/stockfish/src/nnue
-            ../cpp/stockfish/src/nnue/features
-            ../cpp/stockfish/src/nnue/layers
-            ../cpp/stockfish/src/syzygy
-)
+option(STOCKFISH_BUILD_SMOKE "Build the native prototype runner" OFF)
+if(STOCKFISH_BUILD_SMOKE)
+  add_executable(stockfish-lite-smoke ../prototype/smoke.cpp)
+  target_include_directories(stockfish-lite-smoke PRIVATE ../cpp)
+  target_link_libraries(stockfish-lite-smoke PRIVATE stockfish-lite-core)
+  target_link_options(stockfish-lite-smoke PRIVATE -Wl,--gc-sections -Wl,-z,max-page-size=16384)
+endif()

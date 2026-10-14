@@ -4,7 +4,7 @@
 
 bool FakeStream::try_get_line(std::string& val) {
     std::unique_lock<std::mutex> lock(mutex_guard);
-    if (string_queue.empty() || closed) return false;
+    if (string_queue.empty()) return false;
     val = string_queue.front();
     string_queue.pop();
     return true;
@@ -15,7 +15,10 @@ void FakeStream::close() {
     closed = true;
     mutex_signal.notify_one();
 }
-bool FakeStream::is_closed() { return closed; }
+bool FakeStream::is_closed() {
+    std::lock_guard<std::mutex> lock(mutex_guard);
+    return closed;
+}
 
 std::streambuf* FakeStream::rdbuf() { return nullptr; }
 

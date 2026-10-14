@@ -1,88 +1,36 @@
 package com.loloof64.reactnativestockfish
 
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.annotations.ReactModule
-import com.facebook.react.modules.core.DeviceEventManagerModule
-
-import kotlinx.coroutines.*
+import java.util.concurrent.Executors
 
 @ReactModule(name = ReactNativeStockfishModule.NAME)
 class ReactNativeStockfishModule(reactContext: ReactApplicationContext) :
   NativeReactNativeStockfishSpec(reactContext) {
 
-  private val mainCoroutineScope = CoroutineScope(Dispatchers.Default)
-  private val outputReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
-  private val errorReaderCoroutineScope = CoroutineScope(Dispatchers.Default)
+  private val executor = Executors.newSingleThreadExecutor()
+  private external fun evaluateFen(fen: String): String
 
-  external fun main()
-  external fun stdoutRead(): String?
-  external fun stderrRead(): String?
-  external fun stdinWrite(command: String)
+  override fun getName() = NAME
 
-
-  override fun getName(): String {
-    return NAME
-  }
-
-  init {
-    System.loadLibrary("react-native-stockfish")
-  }
-
-  override fun stockfishLoop() {
-    val delayTimeMs = 100L
-    mainCoroutineScope.launch { 
-      delay(delayTimeMs)
-      main()
-    }
-    outputReaderCoroutineScope.launch {
-      while (true) {
-        val reactIsNotReady = reactApplicationContext.currentActivity == null
-        if (reactIsNotReady) {
-          delay(delayTimeMs)
-          continue
-        }
-        val output = stdoutRead()
-        if (output == null) {
-          delay(delayTimeMs)
-          continue
-        }
-        reactApplicationContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          .emit("stockfish-output", output)
-        delay(delayTimeMs)
-      }
-    }
-    errorReaderCoroutineScope.launch {
-      while (true) {
-        val reactIsNotReady = reactApplicationContext.currentActivity == null
-        if (reactIsNotReady) {
-          delay(delayTimeMs)
-          continue
-        }
-        val output = stderrRead()
-        if (output == null) {
-          delay(delayTimeMs)
-          continue
-        }
-        reactApplicationContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-          .emit("stockfish-error", output)
-        delay(delayTimeMs)
+  override fun evaluatePosition(fen: String, promise: Promise) {
+    executor.execute {
+      try {
+        promise.resolve(evaluateFen(fen))
+      } catch (error: Exception) {
+        promise.reject("STOCKFISH_EVALUATION_FAILED", error.message, error)
       }
     }
   }
 
-  override fun sendCommandToStockfish(command: String) {
-    stdinWrite(command)
-  }
-
-  override fun stopStockfish() {
-    outputReaderCoroutineScope.cancel()
-    errorReaderCoroutineScope.cancel()
-    sendCommandToStockfish("quit\n")
+  override fun invalidate() {
+    executor.shutdown()
+    super.invalidate()
   }
 
   companion object {
     const val NAME = "ReactNativeStockfish"
+    init { System.loadLibrary("react-native-stockfish") }
   }
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "before-qd7",
+    "fen": "r1r1k3/2p2p2/2q1p2p/p2pP2P/Pp1BbPQ1/1P2P3/2P4R/2KR4 b - - 0 1",
+    "movePlayed": "Qg4"
+  },
+  {
+    "name": "after-qd7",
+    "fen": "r1r1k3/2pq1p2/4p2p/p2pP2P/Pp1BbPQ1/1P2P3/2P4R/2KR4 w - - 0 1",
+    "movePlayed": "Qd7"
+  },
+  {
+    "name": "knight-fork",
+    "fen": "r1bq1r1k/1p3p1p/p1nb2pN/3p4/5Q2/2PB3P/PP1N1PP1/R4RK1 w - - 0 1",
+    "movePlayed": "Bd6"
+  },
+  {
+    "name": "missed-fork",
+    "fen": "r1bq1r1k/1p3p1p/p1nb2pN/3p4/8/2PBQ2P/PP1N1PP1/R4RK1 b - - 0 1",
+    "movePlayed": "Qe3"
+  }
+]

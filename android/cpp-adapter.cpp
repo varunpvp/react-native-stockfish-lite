@@ -1,6 +1,22 @@
 #include <jni.h>
 #include <string>
 #include "react-native-stockfish.h"
+#include "evaluate-position.h"
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_loloof64_reactnativestockfish_ReactNativeStockfishModule_evaluateFen(JNIEnv *env, jobject, jstring fen)
+{
+    const char *input = env->GetStringUTFChars(fen, nullptr);
+    if (!input) return nullptr;
+    const std::string position(input);
+    env->ReleaseStringUTFChars(fen, input);
+    try {
+        return env->NewStringUTF(reactnativestockfish::evaluate_position(position).c_str());
+    } catch (const std::exception& error) {
+        env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), error.what());
+        return nullptr;
+    }
+}
 
 #define STR_SIZE 1024
 char conv_buffer[STR_SIZE + 1];

@@ -1,0 +1,210 @@
+{
+  "platform": "android-jni",
+  "depthLimit": 12,
+  "movetimeMs": 100,
+  "threads": 1,
+  "hashMb": 16,
+  "repeat": 5,
+  "results": [
+    {
+      "name": "before-qd7",
+      "elapsedMs": 103.56,
+      "depth": 11,
+      "whiteScore": {
+        "cp": 38
+      },
+      "info": "info depth 11 seldepth 14 multipv 1 score cp -38 nodes 12410 nps 590952 hashfull 4 time 21 pv e8d7 g4g7 c8h8 g7f7 d7c8 d1g1 h8h7 f7g8 c8b7",
+      "bestmove": "e8d7"
+    },
+    {
+      "name": "before-qd7",
+      "elapsedMs": 103.77,
+      "depth": 11,
+      "whiteScore": {
+        "cp": 38
+      },
+      "info": "info depth 11 seldepth 14 multipv 1 score cp -38 nodes 12410 nps 620500 hashfull 4 time 20 pv e8d7 g4g7 c8h8 g7f7 d7c8 d1g1 h8h7 f7g8 c8b7",
+      "bestmove": "e8d7"
+    },
+    {
+      "name": "before-qd7",
+      "elapsedMs": 103.8,
+      "depth": 11,
+      "whiteScore": {
+        "cp": 38
+      },
+      "info": "info depth 11 seldepth 14 multipv 1 score cp -38 nodes 12410 nps 620500 hashfull 4 time 20 pv e8d7 g4g7 c8h8 g7f7 d7c8 d1g1 h8h7 f7g8 c8b7",
+      "bestmove": "e8d7"
+    },
+    {
+      "name": "before-qd7",
+      "elapsedMs": 102.85,
+      "depth": 11,
+      "whiteScore": {
+        "cp": 38
+      },
+      "info": "info depth 11 seldepth 14 multipv 1 score cp -38 nodes 12410 nps 620500 hashfull 4 time 20 pv e8d7 g4g7 c8h8 g7f7 d7c8 d1g1 h8h7 f7g8 c8b7",
+      "bestmove": "e8d7"
+    },
+    {
+      "name": "before-qd7",
+      "elapsedMs": 102.19,
+      "depth": 11,
+      "whiteScore": {
+        "cp": 38
+      },
+      "info": "info depth 11 seldepth 14 multipv 1 score cp -38 nodes 12410 nps 590952 hashfull 4 time 21 pv e8d7 g4g7 c8h8 g7f7 d7c8 d1g1 h8h7 f7g8 c8b7",
+      "bestmove": "e8d7"
+    },
+    {
+      "name": "after-qd7",
+      "elapsedMs": 23.51,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 449
+      },
+      "info": "info depth 12 seldepth 25 multipv 1 score cp 449 nodes 9190 nps 437619 hashfull 2 time 21 pv g4g8 e8e7 d4c5 d7d6 c5d6 c7d6 e5d6 e7d6 g8g7 d6e7 f4f5 e4f5 d1g1 f5e4 c1d1 e4f3 d1d2 f3e4 d2e1",
+      "bestmove": "g4g8"
+    },
+    {
+      "name": "after-qd7",
+      "elapsedMs": 21.2,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 449
+      },
+      "info": "info depth 12 seldepth 25 multipv 1 score cp 449 nodes 9190 nps 483684 hashfull 2 time 19 pv g4g8 e8e7 d4c5 d7d6 c5d6 c7d6 e5d6 e7d6 g8g7 d6e7 f4f5 e4f5 d1g1 f5e4 c1d1 e4f3 d1d2 f3e4 d2e1",
+      "bestmove": "g4g8"
+    },
+    {
+      "name": "after-qd7",
+      "elapsedMs": 21.88,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 449
+      },
+      "info": "info depth 12 seldepth 25 multipv 1 score cp 449 nodes 9190 nps 483684 hashfull 2 time 19 pv g4g8 e8e7 d4c5 d7d6 c5d6 c7d6 e5d6 e7d6 g8g7 d6e7 f4f5 e4f5 d1g1 f5e4 c1d1 e4f3 d1d2 f3e4 d2e1",
+      "bestmove": "g4g8"
+    },
+    {
+      "name": "after-qd7",
+      "elapsedMs": 21.98,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 449
+      },
+      "info": "info depth 12 seldepth 25 multipv 1 score cp 449 nodes 9190 nps 510555 hashfull 2 time 18 pv g4g8 e8e7 d4c5 d7d6 c5d6 c7d6 e5d6 e7d6 g8g7 d6e7 f4f5 e4f5 d1g1 f5e4 c1d1 e4f3 d1d2 f3e4 d2e1",
+      "bestmove": "g4g8"
+    },
+    {
+      "name": "after-qd7",
+      "elapsedMs": 23.21,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 449
+      },
+      "info": "info depth 12 seldepth 25 multipv 1 score cp 449 nodes 9190 nps 483684 hashfull 2 time 19 pv g4g8 e8e7 d4c5 d7d6 c5d6 c7d6 e5d6 e7d6 g8g7 d6e7 f4f5 e4f5 d1g1 f5e4 c1d1 e4f3 d1d2 f3e4 d2e1",
+      "bestmove": "g4g8"
+    },
+    {
+      "name": "knight-fork",
+      "elapsedMs": 71.73,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 242
+      },
+      "info": "info depth 12 seldepth 29 multipv 1 score cp 242 nodes 34463 nps 506808 hashfull 14 time 68 pv h6f7 f8f7 f4f7 c6e5 f7f4 e5d3 f4d4 d3e5 a1e1 d8f6 f2f4 e5d7 d4d5 d6c5 g1h1 h8g7 d2e4 f6f7 d5f7 g7f7",
+      "bestmove": "h6f7"
+    },
+    {
+      "name": "knight-fork",
+      "elapsedMs": 71.13,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 242
+      },
+      "info": "info depth 12 seldepth 29 multipv 1 score cp 242 nodes 34463 nps 506808 hashfull 14 time 68 pv h6f7 f8f7 f4f7 c6e5 f7f4 e5d3 f4d4 d3e5 a1e1 d8f6 f2f4 e5d7 d4d5 d6c5 g1h1 h8g7 d2e4 f6f7 d5f7 g7f7",
+      "bestmove": "h6f7"
+    },
+    {
+      "name": "knight-fork",
+      "elapsedMs": 71.07,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 242
+      },
+      "info": "info depth 12 seldepth 29 multipv 1 score cp 242 nodes 34463 nps 514373 hashfull 14 time 67 pv h6f7 f8f7 f4f7 c6e5 f7f4 e5d3 f4d4 d3e5 a1e1 d8f6 f2f4 e5d7 d4d5 d6c5 g1h1 h8g7 d2e4 f6f7 d5f7 g7f7",
+      "bestmove": "h6f7"
+    },
+    {
+      "name": "knight-fork",
+      "elapsedMs": 72.01,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 242
+      },
+      "info": "info depth 12 seldepth 29 multipv 1 score cp 242 nodes 34463 nps 506808 hashfull 14 time 68 pv h6f7 f8f7 f4f7 c6e5 f7f4 e5d3 f4d4 d3e5 a1e1 d8f6 f2f4 e5d7 d4d5 d6c5 g1h1 h8g7 d2e4 f6f7 d5f7 g7f7",
+      "bestmove": "h6f7"
+    },
+    {
+      "name": "knight-fork",
+      "elapsedMs": 72.1,
+      "depth": 12,
+      "whiteScore": {
+        "cp": 242
+      },
+      "info": "info depth 12 seldepth 29 multipv 1 score cp 242 nodes 34463 nps 506808 hashfull 14 time 68 pv h6f7 f8f7 f4f7 c6e5 f7f4 e5d3 f4d4 d3e5 a1e1 d8f6 f2f4 e5d7 d4d5 d6c5 g1h1 h8g7 d2e4 f6f7 d5f7 g7f7",
+      "bestmove": "h6f7"
+    },
+    {
+      "name": "missed-fork",
+      "elapsedMs": 102.62,
+      "depth": 11,
+      "whiteScore": {
+        "cp": -327
+      },
+      "info": "info depth 11 seldepth 22 multipv 1 score cp 327 nodes 38110 nps 568805 hashfull 14 time 67 pv f7f5 d2f3 h8g7 e3d2 d8c7 g2g3 f5f4 h6g4 c8g4 h3g4 f4g3 f2g3 d6g3 g1g2 g3f4 d2f2 g7g8 f2h4 a8e8",
+      "bestmove": "f7f5"
+    },
+    {
+      "name": "missed-fork",
+      "elapsedMs": 105.78,
+      "depth": 11,
+      "whiteScore": {
+        "cp": -327
+      },
+      "info": "info depth 11 seldepth 22 multipv 1 score cp 327 nodes 38110 nps 577424 hashfull 14 time 66 pv f7f5 d2f3 h8g7 e3d2 d8c7 g2g3 f5f4 h6g4 c8g4 h3g4 f4g3 f2g3 d6g3 g1g2 g3f4 d2f2 g7g8 f2h4 a8e8",
+      "bestmove": "f7f5"
+    },
+    {
+      "name": "missed-fork",
+      "elapsedMs": 104.19,
+      "depth": 11,
+      "whiteScore": {
+        "cp": -327
+      },
+      "info": "info depth 11 seldepth 22 multipv 1 score cp 327 nodes 38110 nps 552318 hashfull 14 time 69 pv f7f5 d2f3 h8g7 e3d2 d8c7 g2g3 f5f4 h6g4 c8g4 h3g4 f4g3 f2g3 d6g3 g1g2 g3f4 d2f2 g7g8 f2h4 a8e8",
+      "bestmove": "f7f5"
+    },
+    {
+      "name": "missed-fork",
+      "elapsedMs": 104.43,
+      "depth": 11,
+      "whiteScore": {
+        "cp": -327
+      },
+      "info": "info depth 11 seldepth 22 multipv 1 score cp 327 nodes 38110 nps 544428 hashfull 14 time 70 pv f7f5 d2f3 h8g7 e3d2 d8c7 g2g3 f5f4 h6g4 c8g4 h3g4 f4g3 f2g3 d6g3 g1g2 g3f4 d2f2 g7g8 f2h4 a8e8",
+      "bestmove": "f7f5"
+    },
+    {
+      "name": "missed-fork",
+      "elapsedMs": 103.23,
+      "depth": 11,
+      "whiteScore": {
+        "cp": -327
+      },
+      "info": "info depth 11 seldepth 22 multipv 1 score cp 327 nodes 38110 nps 544428 hashfull 14 time 70 pv f7f5 d2f3 h8g7 e3d2 d8c7 g2g3 f5f4 h6g4 c8g4 h3g4 f4g3 f2g3 d6g3 g1g2 g3f4 d2f2 g7g8 f2h4 a8e8",
+      "bestmove": "f7f5"
+    }
+  ]
+}

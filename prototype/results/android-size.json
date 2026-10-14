@@ -1,0 +1,8 @@
+{
+  "abi": "arm64-v8a",
+  "networkBytes": 1166381,
+  "libraryBytes": 2610568,
+  "libraryDeflateBytes": 1466503,
+  "cppRuntime": "static",
+  "note": "Native library size, not the measured total APK/AAB increase. Includes compact NNUE and static C++ runtime."
+}

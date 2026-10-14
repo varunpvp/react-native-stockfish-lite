@@ -1,0 +1,34 @@
+[
+  {
+    "name": "before-qd7",
+    "elapsedMs": 1195.58,
+    "scoreType": "cp",
+    "score": -38,
+    "depth": 11,
+    "bestMove": "e8d7"
+  },
+  {
+    "name": "after-qd7",
+    "elapsedMs": 27.95,
+    "scoreType": "cp",
+    "score": 449,
+    "depth": 12,
+    "bestMove": "g4g8"
+  },
+  {
+    "name": "knight-fork",
+    "elapsedMs": 83.31,
+    "scoreType": "cp",
+    "score": 242,
+    "depth": 12,
+    "bestMove": "h6f7"
+  },
+  {
+    "name": "missed-fork",
+    "elapsedMs": 106.53,
+    "scoreType": "cp",
+    "score": 327,
+    "depth": 12,
+    "bestMove": "f7f5"
+  }
+]

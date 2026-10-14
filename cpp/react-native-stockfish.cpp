@@ -46,7 +46,7 @@ namespace reactnativestockfish
 
 	char *stockfish_stdout_read()
 	{
-		if (getline(fakeout, data))
+		if (fakeout.try_get_line(data))
 		{
 			size_t len = data.length();
 			size_t i;
@@ -62,7 +62,7 @@ namespace reactnativestockfish
 
 	char *stockfish_stderr_read()
 	{
-		if (getline(fakeerr, err_data))
+		if (fakeerr.try_get_line(err_data))
 		{
 			size_t len = err_data.length();
 			size_t i;

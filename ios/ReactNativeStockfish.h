@@ -1,8 +1,5 @@
 #import <React/RCTBridgeModule.h>
-#import <React/RCTEventEmitter.h>
-#import "react-native-stockfish.h"
-#import "generated/RNReactNativeStockfishSpec/RNReactNativeStockfishSpec.h"
+#import <RNReactNativeStockfishSpec/RNReactNativeStockfishSpec.h>
 
-@interface ReactNativeStockfish : RCTEventEmitter <RCTBridgeModule>
-
+@interface ReactNativeStockfish : NSObject <NativeReactNativeStockfishSpec>
 @end

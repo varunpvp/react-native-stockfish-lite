@@ -19,15 +19,20 @@ class FakeStream {
    public:
     template <typename T>
     FakeStream& operator<<(const T& val) {
-        if (closed) return *this;
+        const auto text = stringify(val);
         std::lock_guard<std::mutex> lock(mutex_guard);
-        string_queue.push(stringify(val));
+        if (closed) return *this;
+        pending += text;
+        std::size_t newline;
+        while ((newline = pending.find('\n')) != std::string::npos) {
+            string_queue.push(pending.substr(0, newline));
+            pending.erase(0, newline + 1);
+        }
         mutex_signal.notify_one();
         return *this;
     };
     template <typename T>
     FakeStream& operator>>(T& val) {
-        if (closed) return *this;
         std::unique_lock<std::mutex> lock(mutex_guard);
         mutex_signal.wait(lock,
                           [this] { return !string_queue.empty() || closed; });
@@ -48,6 +53,7 @@ class FakeStream {
    private:
     bool closed = false;
     std::queue<std::string> string_queue;
+    std::string pending;
     //std::string line;
     std::mutex mutex_guard;
     std::condition_variable mutex_signal;

@@ -1,7 +1,8 @@
 {
-  "name": "@loloof64/react-native-stockfish",
-  "version": "0.3.3",
-  "description": "Use stockfish chess engine in your React Native application.",
+  "name": "@kinghanzo/react-native-stockfish-lite",
+  "version": "0.3.3-lite.0",
+  "private": true,
+  "description": "Native Stockfish 19 lite with its compact network bundled for React Native.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -37,8 +38,8 @@
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
-    "release": "release-it"
+    "release": "release-it",
+    "build": "bob build"
   },
   "keywords": [
     "react-native",
@@ -47,14 +48,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loloof64/ReactNativeStockfish.git"
+    "url": "git+ssh://git@github.com/varunpvp/react-native-stockfish-lite.git"
   },
-  "author": "laurent bernabé <laurent.bernabe@gmail.com> (https://github.com/loloof64)",
-  "license": "MIT",
+  "author": "laurent bernab\u00e9 <laurent.bernabe@gmail.com> (https://github.com/loloof64)",
+  "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/loloof64/ReactNativeStockfish/issues"
+    "url": "https://github.com/varunpvp/react-native-stockfish-lite/issues"
   },
-  "homepage": "https://github.com/loloof64/ReactNativeStockfish#readme",
+  "homepage": "https://github.com/varunpvp/react-native-stockfish-lite",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -155,14 +156,9 @@
     "name": "RNReactNativeStockfishSpec",
     "type": "modules",
     "jsSrcsDir": "src",
-    "outputDir": {
-      "ios": "ios/generated",
-      "android": "android/generated"
-    },
     "android": {
       "javaPackageName": "com.loloof64.reactnativestockfish"
-    },
-    "includesGeneratedCode": true
+    }
   },
   "create-react-native-library": {
     "languages": "kotlin-objc",

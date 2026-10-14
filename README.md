@@ -1,108 +1,55 @@
-# @loloof64/react-native-stockfish
+# Native Stockfish Lite
 
-Use stockfish chess engine in your React Native application.
-
-## Installation
-
-```sh
-npm install @loloof64/react-native-stockfish
-```
+Private maintained copy of [ReactNativeStockfish](https://github.com/loloof64/ReactNativeStockfish),
+using the compact Stockfish.js v19.0.1 engine and its embedded 1.1 MB network.
+The engine runs natively. No WebView, WASM runtime, or network download is needed.
 
 ## Usage
 
-```js
-import {
-  useStockfish
-} from '@loloof64/react-native-stockfish';
+```ts
+import { evaluatePosition } from '@kinghanzo/react-native-stockfish-lite';
 
-// ...
-
-const [stockfishOutput, setStockfishOutput] = useState('');
-  const {stockfishLoop, stopStockfish, sendCommandToStockfish} = useStockfish({
-    onOutput: useCallback((output: string) => {
-      setStockfishOutput((prev) => prev + output);
-    }, []),
-    onError: useCallback((error: string) => {
-      setStockfishOutput((prev) => `${prev}\n###Err\n${error}\n###`);
-    }, [])
-  });
-
-// ...
-
-stockfishLoop();
-
-// ...
-
-sendCommandToStockfish('go movetime 1000');
-
-// ...
-
-stopStockfish();
+const result = await evaluatePosition(fen);
+// { scoreType: 'cp' | 'mate', score: number, depth: number, bestMove: string }
 ```
 
-## Testing example project
+Scores use the side-to-move perspective. A positive score favors the player to
+move; a negative score favors the opponent. Mate zero means the side to move is
+already checkmated. `bestMove` is UCI notation.
 
-Get started with the project:
+The engine uses one thread, 16 MiB hash, depth up to 12, and a 100 ms search limit.
+It returns the last completed evaluation, ignoring temporary score bounds.
+Requests are serialized and execute off the UI thread. Initialization is lazy.
 
-$ yarn
+## Installation
 
-Run the example app on iOS:
+Install from a pinned Git commit. This package contains its built JavaScript and
+its compact network; installation does not require the wrapper's development tools.
+The consuming React Native app generates native bindings for its own RN version.
 
-$ yarn example ios
+Expo requires a rebuilt native development/production app. Expo Go cannot load
+this custom native module. Android integration is tested with Expo SDK 57 and RN
+0.86.2. The iOS bridge is implemented but still needs an Xcode/device build.
 
-Run the example app on Android:
+Private Git dependencies require GitHub access on every machine that installs
+packages, including EAS Build. Keep credentials in the build environment, not in
+package.json, lockfiles, or this repository.
 
-$ yarn example android
+## Development
 
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-### Changing Stockfish source files
-
-If you need to upgrade Stockfish source files, create a folder **stockfish** inside **cpp** folder, copy the **src** folder from the stockfish sources into the new **stockfish folder**.
-
-In **stockfish/src/main.cpp** replace the name of function `main` with `stockfish_core`.
-
-Also you need to make some more adaptive works :
-
-#### Adapting streams
-
-- copy the **cpp/fixes** folder inside the **cpp/stockfish** folder
-
-- replace all calls to `cout << #SomeContent# << endl` by `fakeout << #SomeContent# << fakeendl` (And ajust also calls to `cout.rdbuf()` by `fakeout.rdbuf()`) **But do not replace calls to sync_cout**.
-- copy folder **cpp/fixes** inside the **stockfish** folder
-- add include to **../fixes/fixes.h** in all related files (and adjust the include path accordingly)
-- proceed accordingly for `cin` : replace by `fakein`
-- and the same for `cerr`: replace by `fakeerr`
-- in **misc.h** replace
-
-```cpp
-#define sync_cout std::cout << IO_LOCK
-#define sync_endl std::endl << IO_UNLOCK
+```sh
+npm install --ignore-scripts --workspaces=false
+npm run build
+bash prototype/build-android.sh --device
 ```
 
-with
+Commit the updated `lib/` JavaScript and type definitions when changing `src/`.
+Do not commit native build outputs. See [PROTOTYPE.md](./PROTOTYPE.md) for pinned
+upstream revisions, native build instructions, and measurements.
 
-```cpp
-#define sync_cout fakeout << IO_LOCK
-#define sync_endl fakeendl << IO_UNLOCK
-```
+## Licenses and attribution
 
-and include **../../fixes/fixes.h**
-
-#### Adapting NNUE
-
-In file **CMakeLists.txt** replace the names of big and small NNUE by the ones you can find in file **cpp/stockfish/src/evaluate.h**. Also replace those values in the file **ReactNativeStockfish.podspec**, as well as in the file **android/CMakeLists.txt**.
-
-## License
-
-MIT
-
----
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
-
-## Credits
-
-Using sources of [Stockfish 17](https://stockfishchess.org/).
+The original React Native wrapper is MIT licensed (LICENSE). Stockfish is
+GPL-3.0-or-later (cpp/stockfish/Copying.txt). Engine contributor attribution is
+preserved in cpp/stockfish/AUTHORS. The package's GPL designation does not remove
+the wrapper's original MIT notice.

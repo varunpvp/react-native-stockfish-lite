@@ -1,6 +1,6 @@
 /*
   Stockfish, a UCI chess playing engine derived from Glaurung 2.1
-  Copyright (C) 2004-2024 The Stockfish developers (see AUTHORS file)
+  Copyright (C) 2004-2026 The Stockfish developers (see AUTHORS file)
 
   Stockfish is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,23 +21,31 @@
 #ifndef NNUE_ACCUMULATOR_H_INCLUDED
 #define NNUE_ACCUMULATOR_H_INCLUDED
 
-#include <cstdint>
+#include <array>
+#include <cstddef>
+#include <cstring>
 
+#include "../types.h"
+#include "../misc.h"
 #include "nnue_architecture.h"
 #include "nnue_common.h"
 
+namespace Stockfish {
+class Position;
+}
+
 namespace Stockfish::Eval::NNUE {
 
-using BiasType       = std::int16_t;
-using PSQTWeightType = std::int32_t;
-using IndexType      = std::uint32_t;
+struct alignas(CacheLineSize) Accumulator;
 
-// Class that holds the result of affine transformation of input features
-template<IndexType Size>
+class FeatureTransformer;
+
+// Class that holds the result of affine transformation of input features,
+// combined HalfKA + Threats
 struct alignas(CacheLineSize) Accumulator {
-    std::int16_t accumulation[COLOR_NB][Size];
-    std::int32_t psqtAccumulation[COLOR_NB][PSQTBuckets];
-    bool         computed[COLOR_NB];
+    std::array<std::array<i16, L1>, COLOR_NB>          accumulation;
+    std::array<std::array<i32, PSQTBuckets>, COLOR_NB> psqtAccumulation;
+    std::array<bool, COLOR_NB>                         computed = {};
 };
 
 
@@ -48,56 +56,92 @@ struct alignas(CacheLineSize) Accumulator {
 // This idea, was first described by Luecx (author of Koivisto) and
 // is commonly referred to as "Finny Tables".
 struct AccumulatorCaches {
-
-    template<typename Networks>
-    AccumulatorCaches(const Networks& networks) {
-        clear(networks);
+    template<typename Network>
+    AccumulatorCaches(const Network& network) {
+        clear(network);
     }
 
-    template<IndexType Size>
-    struct alignas(CacheLineSize) Cache {
+    struct alignas(CacheLineSize) Entry {
+        std::array<BiasType, L1>                accumulation;
+        std::array<PSQTWeightType, PSQTBuckets> psqtAccumulation;
+        std::array<Piece, SQUARE_NB>            pieces;
+        Bitboard                                pieceBB;
 
-        struct alignas(CacheLineSize) Entry {
-            BiasType       accumulation[Size];
-            PSQTWeightType psqtAccumulation[PSQTBuckets];
-            Bitboard       byColorBB[COLOR_NB];
-            Bitboard       byTypeBB[PIECE_TYPE_NB];
-
-            // To initialize a refresh entry, we set all its bitboards empty,
-            // so we put the biases in the accumulation, without any weights on top
-            void clear(const BiasType* biases) {
-
-                std::memcpy(accumulation, biases, sizeof(accumulation));
-                std::memset((uint8_t*) this + offsetof(Entry, psqtAccumulation), 0,
-                            sizeof(Entry) - offsetof(Entry, psqtAccumulation));
-            }
-        };
-
-        template<typename Network>
-        void clear(const Network& network) {
-            for (auto& entries1D : entries)
-                for (auto& entry : entries1D)
-                    entry.clear(network.featureTransformer->biases);
+        // To initialize a refresh entry, we set all its bitboards empty,
+        // so we put the biases in the accumulation, without any weights on top
+        void clear(const std::array<BiasType, L1>& biases) {
+            accumulation = biases;
+            std::memset(reinterpret_cast<std::byte*>(this) + offsetof(Entry, psqtAccumulation), 0,
+                        sizeof(Entry) - offsetof(Entry, psqtAccumulation));
         }
-
-        void clear(const BiasType* biases) {
-            for (auto& entry : entries)
-                entry.clear(biases);
-        }
-
-        std::array<Entry, COLOR_NB>& operator[](Square sq) { return entries[sq]; }
-
-        std::array<std::array<Entry, COLOR_NB>, SQUARE_NB> entries;
     };
 
-    template<typename Networks>
-    void clear(const Networks& networks) {
-        big.clear(networks.big);
-        small.clear(networks.small);
+    template<typename Network>
+    void clear(const Network& network) {
+        for (auto& entries1D : entries)
+            for (auto& entry : entries1D)
+                entry.clear(network.featureTransformer.biases);
     }
 
-    Cache<TransformedFeatureDimensionsBig>   big;
-    Cache<TransformedFeatureDimensionsSmall> small;
+#ifdef USE_LITE_NET
+    // Lite mode only has two orientations (king on e..h or a..d files).
+    std::array<Entry, COLOR_NB>& operator[](IndexType bucket) { return entries[bucket]; }
+
+    std::array<std::array<Entry, COLOR_NB>, 2> entries;
+#else
+    std::array<Entry, COLOR_NB>& operator[](Square sq) { return entries[sq]; }
+
+    std::array<std::array<Entry, COLOR_NB>, SQUARE_NB> entries;
+#endif
+};
+
+
+struct AccumulatorState: public Accumulator, Dirties {};
+
+class AccumulatorStack {
+   public:
+    static constexpr usize MaxSize = MAX_PLY + 1;
+
+    [[nodiscard]] const AccumulatorState& latest() const noexcept;
+
+    void     reset() noexcept;
+    Dirties& push() noexcept;
+    void     pop() noexcept;
+
+    void evaluate(const Position&           pos,
+                  const FeatureTransformer& featureTransformer,
+                  // Silence spurious warning on GCC 10
+                  [[maybe_unused]] AccumulatorCaches& cache) noexcept;
+
+   private:
+    [[nodiscard]] AccumulatorState& mut_latest() noexcept;
+
+    void evaluate_side(Color                     perspective,
+                       const Position&           pos,
+                       const FeatureTransformer& featureTransformer,
+                       // Silence spurious warning on GCC 10
+                       [[maybe_unused]] AccumulatorCaches& cache,
+                       usize                               last_usable_accum) noexcept;
+
+    [[nodiscard]] usize find_last_usable_accumulator(Color perspective) const noexcept;
+
+    void forward_update_incremental(Color                     perspective,
+                                    const Position&           pos,
+                                    const FeatureTransformer& featureTransformer,
+                                    const usize               begin) noexcept;
+
+    void backward_update_incremental(Color                     perspective,
+                                     const Position&           pos,
+                                     const FeatureTransformer& featureTransformer,
+                                     const usize               end) noexcept;
+
+    void forward_update_incremental_both(const Position&           pos,
+                                         const FeatureTransformer& featureTransformer,
+                                         usize                     white_begin,
+                                         usize                     black_begin) noexcept;
+
+    std::array<AccumulatorState, MaxSize> accumulators;
+    usize                                 size = 1;
 };
 
 }  // namespace Stockfish::Eval::NNUE

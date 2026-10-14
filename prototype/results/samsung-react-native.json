@@ -1,0 +1,12 @@
+{
+  "expo": "57.0.15",
+  "reactNative": "0.86.2",
+  "device": "Samsung SM-M356B",
+  "checks": [
+    "concurrent Promise evaluations",
+    "knight fork h6f7",
+    "mate zero",
+    "invalid FEN rejection"
+  ],
+  "status": "passed"
+}

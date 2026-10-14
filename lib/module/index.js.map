@@ -1,0 +1,1 @@
+{"version":3,"names":["Stockfish","evaluatePosition","fen","JSON","parse"],"sourceRoot":"../../src","sources":["index.tsx"],"mappings":";;AAAA,OAAOA,SAAS,MAAM,iCAA8B;AASpD,OAAO,eAAeC,gBAAgBA,CAACC,GAAW,EAA+B;EAC/E,OAAOC,IAAI,CAACC,KAAK,CAAC,MAAMJ,SAAS,CAACC,gBAAgB,CAACC,GAAG,CAAC,CAAC;AAC1D","ignoreList":[]}

@@ -1,0 +1,6 @@
+{
+  "libraryBytes": 2622728,
+  "deflateBytes": 1470932,
+  "abi": "arm64-v8a",
+  "includes": "compact network and static C++ runtime"
+}
