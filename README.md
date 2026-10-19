@@ -10,16 +10,50 @@ The engine runs natively. No WebView, WASM runtime, or network download is neede
 import { evaluatePosition } from '@kinghanzo/react-native-stockfish-lite';
 
 const result = await evaluatePosition(fen);
-// { scoreType: 'cp' | 'mate', score: number, depth: number, bestMove: string }
+// { scoreType, score, depth, bestMove, lines }
+
+const analysis = await evaluatePosition(fen, {
+  depth: 20,
+  maxTimeMs: 1500,
+  multiPv: 3,
+});
+// Existing fields describe the strongest returned line.
+analysis.bestMove;
+analysis.lines[1]?.moves; // Second-best continuation, as UCI moves
 ```
 
 Scores use the side-to-move perspective. A positive score favors the player to
 move; a negative score favors the opponent. Mate zero means the side to move is
-already checkmated. `bestMove` is UCI notation.
+already checkmated. `bestMove` and principal variation moves use UCI notation.
 
-The engine uses one thread, 16 MiB hash, depth up to 12, and a 100 ms search limit.
-It returns the last completed evaluation, ignoring temporary score bounds.
-Requests are serialized and execute off the UI thread. Initialization is lazy.
+All fields in the optional second argument are optional:
+
+| Option        | Meaning                                  | Accepted values                      |
+| ------------- | ---------------------------------------- | ------------------------------------ |
+| `depth`       | Maximum search depth                     | Integer, 1–245                       |
+| `maxTimeMs`   | Search budget in milliseconds            | Integer, 1–2,147,483,647             |
+| `maxNodes`    | Maximum nodes searched                   | Integer, 1–`Number.MAX_SAFE_INTEGER` |
+| `multiPv`     | Candidate lines requested; defaults to 1 | Integer, 1–256                       |
+| `searchMoves` | Restrict analysis to legal root moves    | Nonempty array of UCI moves          |
+
+Without a search limit, the defaults remain depth 12 and 100 ms. Supplying any
+limit applies only the supplied limits; search stops when the first is reached.
+`maxTimeMs` excludes initialization and queue time and is not a strict Promise
+deadline. Time and node limits can be exceeded slightly. Invalid options or
+illegal moves reject the Promise; duplicate moves are evaluated once.
+
+Results retain `scoreType`, `score`, `depth`, and `bestMove`, and add `lines`.
+Each line contains `{ rank, scoreType, score, depth, moves }`, ranked strongest
+first (`rank: 1`), with `moves` containing the principal variation. All scores
+use the input position's side-to-move perspective. The top-level fields match
+the strongest returned line. The latest complete set at a common depth is
+returned, which may be shallower than requested or contain fewer legal candidates.
+If no evaluation completes, the Promise rejects. Checkmate and stalemate return
+`depth: 0`, `bestMove: '(none)'`, and `lines: []`.
+
+The engine uses one thread and 16 MiB hash. Requests are serialized and execute
+off the UI thread. Initialization is lazy. Rebuild your native app after updating
+the package to use the new bridge signature on Android and iOS.
 
 ## Installation
 

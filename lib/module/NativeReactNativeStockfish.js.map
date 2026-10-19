@@ -1,1 +1,1 @@
-{"version":3,"names":["TurboModuleRegistry","getEnforcing"],"sourceRoot":"../../src","sources":["NativeReactNativeStockfish.ts"],"mappings":";;AACA,SAASA,mBAAmB,QAAQ,cAAc;AAMlD,eAAeA,mBAAmB,CAACC,YAAY,CAAO,sBAAsB,CAAC","ignoreList":[]}
+{"version":3,"names":["TurboModuleRegistry","getEnforcing"],"sourceRoot":"../../src","sources":["NativeReactNativeStockfish.ts"],"mappings":";;AACA,SAASA,mBAAmB,QAAQ,cAAc;AAalD,eAAeA,mBAAmB,CAACC,YAAY,CAAO,sBAAsB,CAAC","ignoreList":[]}

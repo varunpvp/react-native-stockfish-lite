@@ -4,14 +4,29 @@
 #include "evaluate-position.h"
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_loloof64_reactnativestockfish_ReactNativeStockfishModule_evaluateFen(JNIEnv *env, jobject, jstring fen)
+Java_com_loloof64_reactnativestockfish_ReactNativeStockfishModule_evaluateFen(
+    JNIEnv *env, jobject, jstring fen, jdouble depth, jdouble maxTimeMs,
+    jdouble maxNodes, jdouble multiPv, jobjectArray searchMoves)
 {
     const char *input = env->GetStringUTFChars(fen, nullptr);
     if (!input) return nullptr;
     const std::string position(input);
     env->ReleaseStringUTFChars(fen, input);
     try {
-        return env->NewStringUTF(reactnativestockfish::evaluate_position(position).c_str());
+        reactnativestockfish::EvaluationOptions options;
+        options.depth = static_cast<int>(depth);
+        options.maxTimeMs = static_cast<std::int64_t>(maxTimeMs);
+        options.maxNodes = static_cast<std::uint64_t>(maxNodes);
+        options.multiPv = static_cast<int>(multiPv);
+        for (jsize i = 0; i < env->GetArrayLength(searchMoves); ++i) {
+            auto move = static_cast<jstring>(env->GetObjectArrayElement(searchMoves, i));
+            const char *text = env->GetStringUTFChars(move, nullptr);
+            if (!text) { env->DeleteLocalRef(move); return nullptr; }
+            options.searchMoves.emplace_back(text);
+            env->ReleaseStringUTFChars(move, text);
+            env->DeleteLocalRef(move);
+        }
+        return env->NewStringUTF(reactnativestockfish::evaluate_position(position, options).c_str());
     } catch (const std::exception& error) {
         env->ThrowNew(env->FindClass("java/lang/IllegalArgumentException"), error.what());
         return nullptr;

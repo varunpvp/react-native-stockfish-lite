@@ -9,14 +9,15 @@ public class ReactNativeStockfishModule {
     private static native String stdoutRead();
     private static native String stderrRead();
     private static native void stdinWrite(String command);
-    private static native String evaluateFen(String fen);
+    private static native String evaluateFen(String fen, double depth, double maxTimeMs,
+                                           double maxNodes, double multiPv, String[] searchMoves);
 
     public static void main(String[] args) throws Exception {
         System.load("/data/local/tmp/libreact-native-stockfish-lite.so");
         if (args.length > 0 && args[0].equals("evaluate")) {
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             for (String fen; (fen = input.readLine()) != null;) {
-                System.out.println(evaluateFen(fen));
+                System.out.println(evaluateFen(fen, 12, 100, 0, 1, new String[0]));
             }
             return;
         }
