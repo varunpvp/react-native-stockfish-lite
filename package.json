@@ -7,8 +7,12 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
+      "browser": {
+        "source": "./src/index.web.ts",
+        "default": "./lib/module/index.web.js"
+      },
+      "source": "./src/index.tsx",
       "default": "./lib/module/index.js"
     },
     "./package.json": "./package.json"
@@ -16,6 +20,7 @@
   "files": [
     "src",
     "lib",
+    "web",
     "android",
     "ios",
     "cpp",
