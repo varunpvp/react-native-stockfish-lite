@@ -2,7 +2,8 @@
 
 Private maintained copy of [ReactNativeStockfish](https://github.com/loloof64/ReactNativeStockfish),
 using the compact Stockfish.js v19.0.1 engine and its embedded 1.1 MB network.
-The engine runs natively. No WebView, WASM runtime, or network download is needed.
+Android and iOS run the engine natively. Web runs the bundled single-threaded
+Stockfish.js build in a dedicated worker.
 
 ## Usage
 
@@ -68,6 +69,28 @@ this custom native module. Android integration is tested with Expo SDK 57 and RN
 Private Git dependencies require GitHub access on every machine that installs
 packages, including EAS Build. Keep credentials in the build environment, not in
 package.json, lockfiles, or this repository.
+
+## Web setup
+
+From the consuming Expo or web app, copy both packaged engine assets into its
+static directory before starting the dev server or exporting the site:
+
+```sh
+mkdir -p public/stockfish
+cp node_modules/@kinghanzo/react-native-stockfish-lite/web/stockfish-19-lite-single.* public/stockfish/
+```
+
+Serve these files at `/stockfish/` on the app’s origin, with
+`application/wasm` for the WASM file. Repeat the copy when upgrading the
+library. The browser package export exposes the same `evaluatePosition` API
+shown above. The worker starts on the first evaluation and loads its adjacent
+WASM file. Single-threaded execution works without cross-origin isolation.
+
+The two engine assets come from the `stockfish@19.0.1` npm distribution,
+under GPLv3. See [the corresponding upstream source](https://github.com/nmrugg/stockfish.js/tree/0d5dd7944f88c817c07a26bc4fb1905d5f9c46d6).
+
+To exercise the built browser entry against the actual WASM locally, run
+`node --conditions=browser prototype/web-test/evaluate.mjs` using Node 22.
 
 ## Development
 
